@@ -145,7 +145,7 @@ describe('Actual run of play', function(){
 	});
 
 	it('Play is running', function(){
-		// sprite.play();
+		sprite.play();
 		// sprite.play({fps: 12, from: 10});
 		// sprite.play({fps: 12, loop: false});
 		// sprite.play({fps: 10, from: 22}); // There is no 22
