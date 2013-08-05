@@ -1,0 +1,15 @@
+#spriteEl {
+	background-color: #f0f;
+	height: 102px;
+	margin: 0;
+	padding: 0;
+	width: 102px;
+}
+
+.sprite_consecutive {
+	background: url('images/consecutive.png') no-repeat;
+}
+
+.sprite_stacked {
+	background: url('images/stacked.png') no-repeat;
+}
