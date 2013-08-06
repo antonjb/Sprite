@@ -43,8 +43,8 @@ var foo = new Sprite(..., {width: 20, height: 20}, {imageWidth: 40, imageHeight:
 
 Along with the standard options these are available
 
-- `imageWidth` (Number) - The width of the image. Needed when length isn't set
-- `imageHeight` (Number) - The height of the image. Needed when length isn't set
+- `imageWidth` (Number) - The width of the image. Required when `length` isn't set
+- `imageHeight` (Number) - The height of the image. Required when `length` isn't set
 
 **Array**
 The array definition is useful for more complex sprite sheets with multiple lines and stacked frames.
@@ -62,7 +62,7 @@ Starts the animation.
 
 ```javascript
 var foo = new Sprite(..., ..., {fps: 12, reverse: true});
-// Change my mind, play at 24 fps and forwards
+// Changed my mind, play at 24 fps and forwards
 foo.play({fps: 24, reverse: false, onComplete: fooCompleteHandler});
 ```
 ### stop([frame] [, animated] [, callback])
