@@ -1,6 +1,7 @@
 /*
  * Sprite
  * Anton Ball
+ * MIT license
  * @license
  */
 (function(glob){
@@ -9,16 +10,57 @@
 
 	// Variables
 
-	var version = '0.0.1';
+	var version = '1.0.0',
+		fun = function(){};
 
 	// Private methods
 
+	/*
+	 * convertToFramePoints
+	 * Converts the simple frame object into an array of points.
+	 */
 	var convertToFramePoints = function(frameObject, numFrames){
 		var result = [];
 		for (var i = 0; i < numFrames; i += 1) {
 			result.push([i * frameObject.width, 0, frameObject.width, frameObject.height]);
 		}
 		return result;
+	},
+	/*
+	 * mergeObjects
+	 * Simple object merge.
+	 * destination [Object] - The destination for the properties
+	 * *objects [Object] - The sources for the destination
+	 */
+	mergeObjects = function(){
+		var dest = typeof arguments[0] === 'object' ? arguments[0] : {},
+			n = arguments.length, 
+			i, obj, prop;
+
+		for (i = 0; i < n; i += 1) {
+			obj = arguments[i];
+			if (obj !== null) {
+				for (prop in obj) {
+					dest[prop] = obj[prop];
+				}
+			}
+		}
+		return dest;
+	},
+	/*
+	 * isNumberic
+	 * Test if the value is numeric
+	 * Looked at jQuery's & Underscore's implementation.
+	 */
+	isNumeric = function(value) {
+		return !isNaN(parseFloat(value)) && isFinite(value);
+	},
+	/*
+	 * Test if the object is an array
+	 * Looked at jQuery's & Underscore's implementation.
+	 */
+	isArray = function(obj){
+		return Object.prototype.toString.call(obj) == '[object Array]';
 	};
 
 	// http://paulirish.com/2011/requestanimationframe-for-smart-animating/
@@ -27,6 +69,7 @@
 	// requestAnimationFrame polyfill by Erik Möller. fixes from Paul Irish and Tino Zijdel
 
 	// MIT license
+
 	(function() {
 		var lastTime = 0,
 			vendors = ['ms', 'moz', 'webkit', 'o'];
@@ -62,7 +105,7 @@
 	 * Free to use under the MIT license.
 	 * http://www.opensource.org/licenses/mit-license.php
 	 */
-	window.requestInterval = function(fn, delay) {
+	var requestInterval = function(fn, delay) {
 		if( !window.requestAnimationFrame       && 
 			!window.webkitRequestAnimationFrame && 
 			!(window.mozRequestAnimationFrame && window.mozCancelRequestAnimationFrame) && // Firefox 5 ships without cancel support
@@ -92,14 +135,14 @@
 	 * Behaves the same as clearInterval except uses cancelRequestAnimationFrame() where possible for better performance
 	 * @param {int|object} fn The callback function
 	 */
-	window.clearRequestInterval = function(handle) {
+	var clearRequestInterval = function(handle) {
 		window.cancelAnimationFrame ? window.cancelAnimationFrame(handle.value) :
 		window.webkitCancelAnimationFrame ? window.webkitCancelAnimationFrame(handle.value) :
-		window.webkitCancelRequestAnimationFrame ? window.webkitCancelRequestAnimationFrame(handle.value) : /* Support for legacy API */
+		window.webkitCancelRequestAnimationFrame ? window.webkitCancelRequestAnimationFrame(handle.value) :
 		window.mozCancelRequestAnimationFrame ? window.mozCancelRequestAnimationFrame(handle.value) :
 		window.oCancelRequestAnimationFrame	? window.oCancelRequestAnimationFrame(handle.value) :
 		window.msCancelRequestAnimationFrame ? window.msCancelRequestAnimationFrame(handle.value) :
-		clearInterval(handle);
+		window.clearInterval(handle);
 	};
 
 	// Constructor
@@ -110,12 +153,11 @@
 			framePoints, animationTick, tickCount;
 
 		this.el = el;
-		this.options = $.extend({}, Sprite.defaults, options);
+		this.options = mergeObjects({}, Sprite.defaults, options);
 		this.numFrames = frames.length ? 
 						 frames.length : 
 						 Math.floor(options.imageWidth/frames.width) * Math.floor(options.imageHeight/frames.height);
-
-		framePoints = $.isPlainObject(frames) ? convertToFramePoints(frames, this.numFrames) : frames;
+		framePoints = !isArray(frames) ? convertToFramePoints(frames, this.numFrames) : frames;
 
 		// Methods
 
@@ -123,7 +165,7 @@
 		 * updateFrame
 		 */
 		var updateFrame = function(frame){
-			$(this.el).css('background-position', -frame[0] + 'px ' + -frame[1] + 'px');
+			this.el.style.backgroundPosition = -frame[0] + 'px ' + -frame[1] + 'px';
 		};
 
 		/*
@@ -140,7 +182,7 @@
 		 * num [Number] - Optional. The frame to go to
 		 */
 		this.frame = function(num){
-			if ($.isNumeric(num) && currentFrame !== num) {
+			if (isNumeric(num) && currentFrame !== num) {
 				currentFrame = num < this.numFrames ? num : currentFrame;
 				updateFrame.call(this, framePoints[currentFrame]);
 			}
@@ -163,7 +205,7 @@
 				return this;
 			}
 
-			var playOptions = $.extend({onComplete: $.noop, onFrame: $.noop}, this.options, options),
+			var playOptions = mergeObjects({onComplete: fun, onFrame: fun}, this.options, options),
 				that = this,
 				playFrames = playOptions.reverse ? framePoints.slice(0).reverse() : framePoints,
 				loopCount = 0;
@@ -187,7 +229,7 @@
 			};
 
 			isPlaying = true;
-			animationTick = window.requestInterval(spriteTickHandler, 1000/playOptions.fps);
+			animationTick = requestInterval(spriteTickHandler, 1000/playOptions.fps);
 			return this;
 		};
 
@@ -206,9 +248,9 @@
 			}
 
 			var that = this;
-			callback = callback || $.noop;
+			callback = callback || fun;
 
-			window.clearRequestInterval(animationTick);
+			clearRequestInterval(animationTick);
 			isPlaying = false;
 
 			if (frame && !animated) {
@@ -224,7 +266,6 @@
 
 			return this;
 		};
-
 	};
 
 	/*

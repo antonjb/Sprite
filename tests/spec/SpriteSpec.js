@@ -129,14 +129,14 @@ describe('Actual run of play', function(){
 	var sprite;
 
 	// beforeEach(function(){
-	// 	var el = document.getElementById('spriteEl'),
-	// 		$el = $(el).addClass('sprite_consecutive');
+	// 	var el = document.getElementById('spriteEl');
+	// 	el.className = 'sprite_consecutive';
 	// 	sprite = new Sprite(el, {width: 102, height: 102, length: 20});
 	// });
 
 	beforeEach(function(){
-		var el = document.getElementById('spriteEl'),
-			$el = $(el).addClass('sprite_stacked');
+		var el = document.getElementById('spriteEl');
+		el.className = 'sprite_stacked';
 		sprite = new Sprite(el, [[0, 0, 102, 102], [102, 0, 102, 102], [204, 0, 102, 102], [306, 0, 102, 102],
 			[408, 0, 102, 102], [510, 0, 102, 102], [612, 0, 102, 102], [714, 0, 102, 102], 
 			[816, 0, 102, 102], [0, 102, 102, 102], [102, 102, 102, 102], [204, 102, 102, 102],
@@ -153,10 +153,10 @@ describe('Actual run of play', function(){
 		// sprite.play({fps: 4, reverse: true});
 		// sprite.play({loop: 2, reverse: true});
 		// sprite.play({fps: 4, reverse: true, loop: false});
-		// sprite.play({fps: 4, from: 10}).stop();
-		// sprite.play({fps: 4, from: 10}).stop(14);
-		// sprite.play({fps: 4, from: 2}).stop(1);
-		// sprite.play({fps: 4, from: 3}).stop(10, true, function(){
+		// sprite.play({from: 10}).stop();
+		// sprite.play({from: 10}).stop(14);
+		// sprite.play({from: 2}).stop(1);
+		// sprite.play({from: 3}).stop(10, true, function(){
 		// 	console.log('stop callback');
 		// });
 		// sprite.play({loop: 2,
