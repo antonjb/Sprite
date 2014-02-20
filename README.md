@@ -65,12 +65,13 @@ var foo = new Sprite(..., ..., {fps: 12, reverse: true});
 // Changed my mind, play at 24 fps and forwards
 foo.play({fps: 24, reverse: false, onComplete: fooCompleteHandler});
 ```
-### stop([frame] [, animated] [, callback])
+### stop([options])
 Stops the animation, optionally on a specific frame.
 
-- `frame` (Number) - Frame number to stop on
-- `animated` (Boolean) - If stopping should be animated
-- `callback` (Function) - Called on completion of an animated `stop`
+- `options` (Object)
+	- `frame` (Number) - Frame number to stop on
+	- `animated` (Boolean) - If stopping should be animated
+	- `callback` (Function) - Called on completion of `stop`
 
 ### frame([value])
 Getter/Setter for frame.
