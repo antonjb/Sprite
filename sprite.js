@@ -10,8 +10,10 @@
 	// Private methods
 
 	/*
-	 * convertToFramePoints
 	 * Converts the simple frame object into an array of points.
+	 * @param {Object} frameObject - The frame object to use
+	 * @param {Number} numFrames - The number of frames
+	 * @returns {Array}
 	 */
 	var convertToFramePoints = function(frameObject, numFrames){
 		var result = [];
@@ -21,10 +23,10 @@
 		return result;
 	},
 	/*
-	 * mergeObjects
-	 * Simple object merge.
-	 * destination [Object] - The destination for the properties
-	 * *objects [Object] - The sources for the destination
+	 * Simple object merge
+	 * @param {Object} destination - The destination for the merged object
+	 * @param {Object} sources - The objects to merge
+	 * @returns {Object} The merged object
 	 */
 	mergeObjects = function(){
 		var dest = typeof arguments[0] === 'object' ? arguments[0] : {},
@@ -42,21 +44,23 @@
 		return dest;
 	},
 	/*
-	 * isNumberic
-	 * Test if the value is numeric
-	 * Looked at jQuery's & Underscore's implementation.
+	 * Returns if the value is numeric.
+	 * Inspired by jQuery & Underscore's implementation.
+	 * @param {Object} value - The value to test
+	 * @returns {Boolean} - Whether value was numeric
 	 */
 	isNumeric = function(value) {
 		return !isNaN(parseFloat(value)) && isFinite(value);
 	},
 	/*
-	 * Test if the object is an array
-	 * Looked at jQuery's & Underscore's implementation.
+	 * Returns if the object is an Array
+	 * Inspired by jQuery & Underscore's implementation.
+	 * @param {Object} obj - The object to test
+	 * @returns {Boolean} - Whether the object is an Array
 	 */
 	isArray = function(obj){
 		return Object.prototype.toString.call(obj) === '[object Array]';
 	};
-
 
 	/**
 	 * http://paulirish.com/2011/requestanimationframe-for-smart-animating/
@@ -143,6 +147,13 @@
 
 	// Constructor
 
+	/**
+	 * The Sprite constructor
+	 * @constructor
+	 * @param {Element} el - The DOM Element
+	 * @param {Array|Object} frames - The frames of the Sprite
+	 * @param {Object} options - Additional options for the Sprite
+	 */
 	var Sprite = function(el, frames, options){
 		var isPlaying = false,
 			currentFrame = 0,
@@ -158,24 +169,26 @@
 		// Methods
 
 		/*
-		 * updateFrame
+		 * Updates the position of the frame
+		 * @private
+		 * @param {Array} frame - The frame to move to
 		 */
 		var updateFrame = function(frame){
 			this.el.style.backgroundPosition = -frame[0] + 'px ' + -frame[1] + 'px';
 		};
 
 		/*
-		 * isPlaying
-		 * Whether the sprite is currently playing
+		 * Returns whether the Sprite is animating
+		 * @returns {Boolean}
 		 */
 		this.isPlaying = function(){
 			return isPlaying;
 		};
 
 		/*
-		 * frame
-		 * Gets or sets the frame number
-		 * num [Number] - Optional. The frame to go to
+		 * Getter/Setter for the frame number
+		 * @param {Number} num - The frame number
+		 * @returns {Number} the current frame number
 		 */
 		this.frame = function(num){
 			if (isNumeric(num) && currentFrame !== num) {
@@ -186,15 +199,15 @@
 		};
 
 		/*
-		 * Play
-		 * Starts the sprite sheet animation with optional options
-		 * options [Object]
-		 *		fps [Number] - Frames per second
-		 *		from [Number] - Frame number to start from
-		 *		reverse [Boolean] - Whether to play the frames in reverse
-		 *		loop [Boolean] - If the sprite loops its animation
-		 *		onFrame [Function] - Callback on a frame
-		 *		onComplete [Function] - Callback when the animation is finished
+		 * Starts the sprite sheet animation
+		 * @param {Object} options - Optional overrides
+		 *		{Number} fps - Frames per second
+		 *		{Number} from - Frame number to start from
+		 *		{Boolean} reverse - Whether to play in reverse
+		 *		{Boolean} loop - If the Sprite loops
+		 *		{Function} onFrame - Callback on a frame
+		 *		{Function} onComplete - Callback when the animation is finished
+		 * @returns {Sprite}
 		 */
 		this.play = function(options){
 			if (isPlaying) {
@@ -209,10 +222,15 @@
 			tickCount = 0;
 			currentFrame = this.frame(playOptions.from || currentFrame);
 			
+			/**
+			 * Each time a frame is entered
+			 * @private
+			 */
 			var spriteTickHandler = function(){
 				updateFrame.call(that, playFrames[currentFrame]);
 				currentFrame = (currentFrame += 1) % that.numFrames;
 				playOptions.onFrame.call(that, currentFrame, loopCount);
+
 				if (currentFrame === 0) {
 					loopCount += 1;
 					if (!playOptions.loop || loopCount === playOptions.loop) {
@@ -226,18 +244,17 @@
 
 			isPlaying = true;
 			animationTick = requestInterval(spriteTickHandler, 1000/playOptions.fps);
+
 			return this;
 		};
 
 		/*
-		 * stop
-		 * Stop the sprite animation on an optional frame with optional
-		 * animation and callback
-		 *
-		 * options [Object]
-		 *		frame [Number] - Which frame to stop on
-		 *		animated [Boolean] - If this stop is animated
-		 *		callback [Function] - Callback for animated stops
+		 * Stop the sprite animation
+		 * @param {Object} options - Optional options
+		 *		{Number} frame - Frame to stop on
+		 *		{Boolean} animated - Whether to animate to the stopping frame
+		 *		{Function} callback - Callback once Sprite is stopped
+		 * @returns {Sprite}
 		 */
 		this.stop = function(options){
 			var that = this;
@@ -264,26 +281,19 @@
 		};
 	};
 
-	/*
-	 * toString
-	 */
 	Sprite.toString = function(){
 		return 'Sprite version ' + this.version;
 	};
 
 	// Global Properties
 
-	/*
-	 * version
-	 */
 	Sprite.version = version;
 	
 	/*
-	 * defaults
 	 * The default options
-	 * fps [Number] - Frames per second. Higher number is more taxing
-	 * loop [Boolean] - Whether the sprite animation loops
-	 * reverse [Boolean] - Whether to play the animation in reverse
+	 * @param {Number} fps - Frames per second. Higher number is more taxing
+	 * @param {Boolean} loop - Whether the sprite animation loops
+	 * @param {Boolean} reverse - Whether to play the animation in reverse
 	 */
 	Sprite.defaults = {
 		fps: 12,
@@ -291,8 +301,7 @@
 		reverse: false
 	};
 	
-	// Namespace
-
+	// Expose Sprite
 	glob.Sprite = Sprite;
 
 }(this));
