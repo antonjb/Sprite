@@ -153,19 +153,24 @@ describe('Actual run of play', function(){
 		// sprite.play({fps: 4, reverse: true});
 		// sprite.play({loop: 2, reverse: true});
 		// sprite.play({fps: 4, reverse: true, loop: false});
+
 		// sprite.play({from: 10}).stop();
-		// sprite.play({from: 10}).stop(14);
-		// sprite.play({from: 2}).stop(1);
-		// sprite.play({from: 3}).stop(10, true, function(){
+		// sprite.play({fps: 4, reverse: true, from: 10}).stop({frame: 7, animated: true});
+		// sprite.play({fps: 4}).stop({frame: 7, animated: true});
+
+		// sprite.play({from: 10}).stop({frame: 14});
+		// sprite.play({from: 2}).stop({frame: 0});
+		// sprite.play({from: 3}).stop({frame: 10, animated: true, callback: function(){
 		// 	console.log('stop callback');
-		// });
+		// }});
 		// sprite.play({loop: 2,
-		// 			onFrame: function(currentFrame, numLoops){
-		// 				console.log('onFrame: ' + currentFrame + '\t' + numLoops);
-		// 			},
-		// 			onComplete: function(){
-		// 			 	console.log('complete');
-		// 			}});
+		// 	onFrame: function(currentFrame, numLoops){
+		// 		console.log('onFrame: ' + currentFrame + '\t' + numLoops);
+		// 	},
+		// 	onComplete: function(){
+		// 	 	console.log('complete');
+		// 	}
+		// });
 	});
 
 });

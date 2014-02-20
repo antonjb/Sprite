@@ -10,7 +10,7 @@ module.exports = function(grunt){
 			' * <%= pkg.author %>\n',
 			' * MIT license\n',
 			' * @license\n',
-			' */'].join(''),
+			' */\n'].join(''),
 
 		jshint: {
 			options:{

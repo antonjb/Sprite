@@ -4,7 +4,7 @@
 
 	// Variables
 
-	var version = '1.0.0',
+	var version = '1.0.1',
 		fun = function(){};
 
 	// Private methods
@@ -54,16 +54,16 @@
 	 * Looked at jQuery's & Underscore's implementation.
 	 */
 	isArray = function(obj){
-		return Object.prototype.toString.call(obj) == '[object Array]';
+		return Object.prototype.toString.call(obj) === '[object Array]';
 	};
 
-	// http://paulirish.com/2011/requestanimationframe-for-smart-animating/
-	// http://my.opera.com/emoller/blog/2011/12/20/requestanimationframe-for-smart-er-animating
 
-	// requestAnimationFrame polyfill by Erik Möller. fixes from Paul Irish and Tino Zijdel
-
-	// MIT license
-
+	/**
+	 * http://paulirish.com/2011/requestanimationframe-for-smart-animating/
+	 * http://my.opera.com/emoller/blog/2011/12/20/requestanimationframe-for-smart-er-animating
+	 * requestAnimationFrame polyfill by Erik Möller. fixes from Paul Irish and Tino Zijdel
+	 * MIT license
+	 */
 	(function() {
 		var lastTime = 0,
 			vendors = ['ms', 'moz', 'webkit', 'o'];
@@ -73,7 +73,7 @@
 		}
 
 		if (!window.requestAnimationFrame){
-			window.requestAnimationFrame = function(callback, element) {
+			window.requestAnimationFrame = function(callback) {
 				var currTime = new Date().getTime(),
 					timeToCall = Math.max(0, 16 - (currTime - lastTime)),
 					id = window.setTimeout(function() { callback(currTime + timeToCall); }, timeToCall);
@@ -104,8 +104,10 @@
 			!window.webkitRequestAnimationFrame && 
 			!(window.mozRequestAnimationFrame && window.mozCancelRequestAnimationFrame) && // Firefox 5 ships without cancel support
 			!window.oRequestAnimationFrame      && 
-			!window.msRequestAnimationFrame)
-				return window.setInterval(fn, delay);
+			!window.msRequestAnimationFrame) 
+		{
+			return window.setInterval(fn, delay);
+		}
 				
 		var start = new Date().getTime(),
 			handle = {};
@@ -206,7 +208,7 @@
 
 			tickCount = 0;
 			currentFrame = this.frame(playOptions.from || currentFrame);
-
+			
 			var spriteTickHandler = function(){
 				updateFrame.call(that, playFrames[currentFrame]);
 				currentFrame = (currentFrame += 1) % that.numFrames;
@@ -232,28 +234,28 @@
 		 * Stop the sprite animation on an optional frame with optional
 		 * animation and callback
 		 *
-		 * frame [Number] - Which frame to stop on
-		 * animated [Boolean] - If this stop is animated
-		 * callback [Function] - Callback for animated stops
+		 * options [Object]
+		 *		frame [Number] - Which frame to stop on
+		 *		animated [Boolean] - If this stop is animated
+		 *		callback [Function] - Callback for animated stops
 		 */
-		this.stop = function(frame, animated, callback){
-			if (!isPlaying){
-				return this;
-			}
-
+		this.stop = function(options){
 			var that = this;
-			callback = callback || fun;
 
+			if (!isPlaying) {return this;}
+			
+			options = mergeObjects({callback: fun, frame: currentFrame, animated: false}, options);
+			options.frame = isNumeric(options.frame) ? options.frame : currentFrame;
 			clearRequestInterval(animationTick);
 			isPlaying = false;
 
-			if (frame && !animated) {
-				this.frame(frame);
-			} else if (frame && animated) {
-				this.play({from: currentFrame, onFrame: function(currentFrame){
-					if (frame === currentFrame) {
-						that.stop();
-						callback.call(that);
+			if (!options.animated) {
+				this.frame(options.frame);
+				options.callback.call(this);
+			} else {
+				this.play({from: options.frame, onFrame: function(currentFrame){
+					if (options.frame === currentFrame) {
+						that.stop({callback: options.callback});
 					}
 				}});
 			}

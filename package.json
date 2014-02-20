@@ -1,6 +1,6 @@
 {
   "name": "Sprite",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "JavaScript sprite sheet animation library.",
   "main": "sprite.js",
   "homepage": "https://github.com/antonjb/Sprite",
