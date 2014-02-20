@@ -7,3 +7,4 @@ ehthumbs.db
 Thumbs.db
 .jshintrc
 tests/src/images/Numbers.fla
+node_modules/

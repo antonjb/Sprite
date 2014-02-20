@@ -1,9 +1,3 @@
-/*
- * Sprite
- * Anton Ball
- * MIT license
- * @license
- */
 (function(glob){
 
 	"use strict";
