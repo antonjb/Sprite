@@ -87,7 +87,7 @@ Options can be set when instantiating Sprite or overridden when using the `play`
 - `fps` (Number) - Frames per second. Default: 12.
 - `loop` (Boolean||Number) - Boolean or a Number for how many times to loop. Default: true.
 - `reverse` (Boolean) - If the animation plays in reverse. Default: false.
-- `from` (Number) - Frame number to start from.
+- `from` (Number) - Frame number to start from and, if `loop` is false|number the frame it'll stop on.
 - `onFrame` (Function(currentFrame, numLoops)) - Callback on each frame.
 - `onComplete` (Function) - Callback once the animation is complete.
 

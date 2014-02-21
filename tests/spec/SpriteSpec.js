@@ -150,16 +150,18 @@ describe('Actual run of play', function(){
 		// sprite.play({fps: 12, loop: false});
 		// sprite.play({fps: 10, from: 22}); // There is no 22
 		// sprite.play({loop: 2});
+		// sprite.play({from: 4, loop: 1});
 		// sprite.play({fps: 4, reverse: true});
 		// sprite.play({loop: 2, reverse: true});
 		// sprite.play({fps: 4, reverse: true, loop: false});
 
 		// sprite.play({from: 10}).stop();
-		// sprite.play({fps: 4, reverse: true, from: 10}).stop({frame: 7, animated: true});
+		// sprite.play({from: 10}).stop({frame: 0}).play();
 		// sprite.play({fps: 4}).stop({frame: 7, animated: true});
+		// sprite.play({fps: 4, reverse: true, from: 10}).stop({frame: 10, animated: true});
+		// sprite.play({fps: 4, reverse: true, from: 10}).stop({frame: 0, animated: true});
 
 		// sprite.play({from: 10}).stop({frame: 14});
-		// sprite.play({from: 2}).stop({frame: 0});
 		// sprite.play({from: 3}).stop({frame: 10, animated: true, callback: function(){
 		// 	console.log('stop callback');
 		// }});
@@ -169,6 +171,19 @@ describe('Actual run of play', function(){
 		// 	},
 		// 	onComplete: function(){
 		// 	 	console.log('complete');
+		// 	}
+		// });
+		// sprite.play({reverse: true, loop: 2,
+		// 	onFrame: function(currentFrame, numLoops){
+		// 		console.log('onFrame: ' + currentFrame + '\t' + numLoops);
+		// 	},
+		// 	onComplete: function(){
+		// 	 	console.log('complete');
+		// 	}
+		// });
+		// sprite.play({
+		// 	onComplete: function(){
+		// 	 	console.log('I should never be called...');
 		// 	}
 		// });
 	});

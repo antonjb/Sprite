@@ -157,7 +157,8 @@
 	var Sprite = function(el, frames, options){
 		var isPlaying = false,
 			currentFrame = 0,
-			framePoints, animationTick, tickCount;
+			currentOptions, framePoints, 
+			animationTick, tickCount;
 
 		this.el = el;
 		this.options = mergeObjects({}, Sprite.defaults, options);
@@ -165,6 +166,7 @@
 						 frames.length : 
 						 Math.floor(options.imageWidth/frames.width) * Math.floor(options.imageHeight/frames.height);
 		framePoints = !isArray(frames) ? convertToFramePoints(frames, this.numFrames) : frames;
+		currentOptions = mergeObjects({}, this.options);
 
 		// Methods
 
@@ -216,22 +218,22 @@
 
 			var playOptions = mergeObjects({onComplete: fun, onFrame: fun}, this.options, options),
 				that = this,
-				playFrames = playOptions.reverse ? framePoints.slice(0).reverse() : framePoints,
 				loopCount = 0;
 
 			tickCount = 0;
 			currentFrame = this.frame(playOptions.from || currentFrame);
+			currentOptions = mergeObjects({}, playOptions);
 			
 			/**
 			 * Each time a frame is entered
 			 * @private
 			 */
 			var spriteTickHandler = function(){
-				updateFrame.call(that, playFrames[currentFrame]);
-				currentFrame = (currentFrame += 1) % that.numFrames;
+				currentFrame = (playOptions.reverse ? that.numFrames + (currentFrame - 1) : currentFrame + 1) % that.numFrames;
+				updateFrame.call(that, framePoints[currentFrame]);
 				playOptions.onFrame.call(that, currentFrame, loopCount);
 
-				if (currentFrame === 0) {
+				if (currentFrame === (playOptions.from || 0)) {
 					loopCount += 1;
 					if (!playOptions.loop || loopCount === playOptions.loop) {
 						that.stop();
@@ -265,12 +267,12 @@
 			options.frame = isNumeric(options.frame) ? options.frame : currentFrame;
 			clearRequestInterval(animationTick);
 			isPlaying = false;
-
+			
 			if (!options.animated) {
 				this.frame(options.frame);
 				options.callback.call(this);
 			} else {
-				this.play({from: options.frame, onFrame: function(currentFrame){
+				this.play({reverse: currentOptions.reverse, fps: currentOptions.fps, onFrame: function(currentFrame){
 					if (options.frame === currentFrame) {
 						that.stop({callback: options.callback});
 					}
