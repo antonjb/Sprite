@@ -58,7 +58,7 @@ var foo = new Sprite(..., frames);
 ### play([options])
 Starts the animation.
 
-- `options` (Object) - Override any of the options set previously. See Options.
+- `options` (Object) - Override any of the options set previously. [See Options](#options).
 
 ```javascript
 var foo = new Sprite(..., ..., {fps: 12, reverse: true});
@@ -71,7 +71,7 @@ Stops the animation, optionally on a specific frame.
 - `options` (Object)
 	- `frame` (Number) - Frame number to stop on
 	- `animated` (Boolean) - If stopping should be animated
-	- `callback` (Function) - Called on completion of `stop`
+	- `onComplete` (Function) - Called on completion of `stop`
 
 ### frame([value])
 Getter/Setter for frame.

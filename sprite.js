@@ -255,7 +255,7 @@
 		 * @param {Object} options - Optional options
 		 *		{Number} frame - Frame to stop on
 		 *		{Boolean} animated - Whether to animate to the stopping frame
-		 *		{Function} callback - Callback once Sprite is stopped
+		 *		{Function} onComplete - Callback once Sprite is stopped
 		 * @returns {Sprite}
 		 */
 		this.stop = function(options){
@@ -263,18 +263,18 @@
 
 			if (!isPlaying) {return this;}
 			
-			options = mergeObjects({callback: fun, frame: currentFrame, animated: false}, options);
+			options = mergeObjects({onComplete: fun, frame: currentFrame, animated: false}, options);
 			options.frame = isNumeric(options.frame) ? options.frame : currentFrame;
 			clearRequestInterval(animationTick);
 			isPlaying = false;
 			
 			if (!options.animated) {
 				this.frame(options.frame);
-				options.callback.call(this);
+				options.onComplete.call(this);
 			} else {
 				this.play({reverse: currentOptions.reverse, fps: currentOptions.fps, onFrame: function(currentFrame){
 					if (options.frame === currentFrame) {
-						that.stop({callback: options.callback});
+						that.stop({onComplete: options.onComplete});
 					}
 				}});
 			}
